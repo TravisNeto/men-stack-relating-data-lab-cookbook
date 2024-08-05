@@ -18,8 +18,11 @@ router.get('/new', (req, res) => {
 router.post('/', async (req, res) => {
     try {
         const foundUser = await User.findbyId(req.session.user._Id)
+        foundUser.pantry.push(req.body)
+        await foundUser.save()
+        res.redirect(`/users/${foundUser._id}/foods`)
     } catch (error) {
-        res.status(400).json({msg: error.message})
+        res.redirect('/')
     }
 }); 
 
