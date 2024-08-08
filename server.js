@@ -8,7 +8,7 @@ const morgan = require('morgan');
 const session = require('express-session');
 const authController = require('./controllers/auth.js');
 const isSignedIn = require('./middleware/is-signed-in.js');
-const foodsController = require('./controllers/foods.js');
+const foodsController = require('./controllers/food.js');
 
 
 const passUserToView = require('./middleware/pass-user-to-view.js');
@@ -23,10 +23,7 @@ mongoose.connection.on('connected', () => {
 
 
 // server.js
-app.use(passUserToView)
-app.use('/auth', authController);
-app.use(isSignedIn);
-app.use('/users/:userId/foods',foodsController);
+
 app.use(express.urlencoded({ extended: false }));
 app.use(methodOverride('_method'));
 // app.use(morgan('dev'));
@@ -44,6 +41,11 @@ app.get('/', (req, res) => {
   });
 });
 
+app.use(passUserToView)
+app.use('/auth', authController);
+app.use(isSignedIn);
+app.use('/users/:userId/foods',foodsController);
+
 app.get('/vip-lounge', (req, res) => {
   if (req.session.user) {
     res.send(`Welcome to the party ${req.session.user.username}.`);
@@ -51,8 +53,6 @@ app.get('/vip-lounge', (req, res) => {
     res.send('Sorry, no guests allowed.');
   }
 });
-
-app.use('/auth', authController);
 
 app.listen(port, () => {
   console.log(`The express app is ready on port ${port}!`);

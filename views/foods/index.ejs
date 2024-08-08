@@ -8,5 +8,15 @@
   <body>
     <%- include('../partials/_navbar.ejs') %>
     <h1>Welcome to my Pantry</h1>
+
+    <% foundPantry.forEach((item) => { %>
+      <li>
+      <%= item.food %>
+      <form action="/users/<%= user._id %>/foods/<%= item._id %>?_method=DELETE" method="POST">
+      <button type="submit">Delete</button>
+    </form>
+      </li>
+    <% }) %>
+    <a href="/users/<%= user._id %>/foods/new ">Make New Item</a>
   </body>
 </html>

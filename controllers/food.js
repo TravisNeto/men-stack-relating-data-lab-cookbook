@@ -4,20 +4,26 @@ const User = require('../models/user.js')
 const express = require('express');
 const router = express.Router();
 
-const User = require('../models/user.js');
 
 
-router.get('/', (req, res) => {
-    res.render('foods/index.ejs')
-  });
+
+router.get('/', async (req, res) => {
+  const userId = req.session.user._id;
+  const user = await User.findById(userId);
+  res.render('foods/index.ejs', {
+    foundPantry: user.pantry
+  })
+});
 
 router.get('/new', (req, res) => {
-    res.render('foods/new/ejs')
+    res.render('foods/new.ejs')
   });
 
 router.post('/', async (req, res) => {
+    console.log(req.session)
     try {
-        const foundUser = await User.findbyId(req.session.user._Id)
+        const foundUser = await User.findById(req.session.user._id)
+        console.log(foundUser)
         foundUser.pantry.push(req.body)
         await foundUser.save()
         res.redirect(`/users/${foundUser._id}/foods`)
@@ -25,6 +31,14 @@ router.post('/', async (req, res) => {
         res.redirect('/')
     }
 }); 
+
+router.delete('/users/:userId/foods/:itemId', async (req, res) => {
+  const userId = req.session.user._id;
+  const user = await User.findById(userId);
+  
+});
+
+
 
 
 // router logic will go here - will be built later on in the lab
